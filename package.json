@@ -1,0 +1,24 @@
+{
+  "name": "angular-validity",
+  "version": "1.0.0",
+  "description": "Validation framework for AngularJS",
+  "main": "angular-validity.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2Toad/Angular-Validity"
+  },
+  "keywords": [
+    "angular",
+    "validation",
+    "validate"
+  ],
+  "author": "2Toad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/2Toad/Angular-Validity/issues"
+  },
+  "homepage": "https://github.com/2Toad/Angular-Validity",
+  "devDependencies": {
+    "angular": "~1.4"
+  }
+}
