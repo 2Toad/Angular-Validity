@@ -66,6 +66,8 @@
                 var rules = getControlRules(control);
                 resetControl(control, rules);
             });
+
+            return this;
         }
 
         this.rules = function (config) {
