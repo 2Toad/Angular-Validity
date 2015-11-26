@@ -48,14 +48,14 @@
 
             angular.merge(model.callbacks, config);
             return this;
-        }
+        };
 
         this.options = function (config) {
             if (!config) return model.options;
 
             angular.merge(model.options, config);
             return this;
-        }
+        };
 
         this.reset = function (form) {
             form.$setPristine();
@@ -68,14 +68,14 @@
             });
 
             return this;
-        }
+        };
 
         this.rules = function (config) {
             if (!config) return model.rules;
 
             angular.merge(model.rules, config);
             return this;
-        }
+        };
 
         this.state = function (form) {
             var controls = form && model.controls[form.$vid];
@@ -96,7 +96,7 @@
                     || invalid && "invalid"
                     || "valid";
             }
-        }
+        };
 
         this.validate = function (form, control) {
             var controls = getValidityControls(form, control),
@@ -153,7 +153,7 @@
                                     function () { deferred.resolve(rule); },
                                     function () { deferred.reject(rule); }
                                 )
-                            : result && deferred.resolve(rule) || deferred.reject(rule)
+                            : result && deferred.resolve(rule) || deferred.reject(rule);
 
                         return deferred.promise;
                     }
@@ -162,7 +162,7 @@
                 function executeRemainingTests(required) {
                     return $q.all(tests).then(function (rules) {
                         return required && rules.concat(required) || rules;
-                    })
+                    });
                 }
             }
 
@@ -197,7 +197,7 @@
 
                 return $q.reject();
             }
-        }
+        };
 
         function getProviderModel() {
             return {
@@ -213,7 +213,7 @@
                     style: null
                 },
                 rules: getValidationRules()
-            }
+            };
 
             function getValidationRules() {
                 return {
@@ -287,7 +287,7 @@
                     case "valid": return formGroup.removeClass("has-error").addClass("has-success");
                     case "invalid": return formGroup.removeClass("has-success").addClass("has-error");
                     case "reset": return formGroup.removeClass("has-error").removeClass("has-success");
-                        return console.error("Angular-Validity - Error: invalid state", state);
+                    default: return console.error("Angular-Validity - Error: invalid state", state);
                 }
             }
         }
