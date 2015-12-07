@@ -8,6 +8,10 @@
 
 Asynchronous validation for Angular applications
 
-* [About](https://angular-validity.readme.io/docs/welcome)
-* [Getting Started](https://angular-validity.readme.io/docs/getting-started)
-* [Demos](https://angular-validity.readme.io/docs/demos)
+---
+
+OMFG -- a fully documented open source library, complete with working demos!
+
+* [About](https://angular-validity.readme.io/v1.2.0/docs/welcome)
+* [Getting Started](https://angular-validity.readme.io/v1.2.0/docs/getting-started)
+* [Demos](https://angular-validity.readme.io/v1.2.0/docs/demos)
