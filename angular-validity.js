@@ -218,6 +218,11 @@
             function getValidationRules() {
                 return {
                     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    eval: function (value, arg, control) {
+                        var scope = control.$element.scope();
+                        var expression = control.$element.attr("validity-eval");
+                        return scope.$eval(expression);
+                    },
                     max: function (value, max) {
                         return typeof value === "number"
                             ? value <= max
