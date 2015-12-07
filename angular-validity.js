@@ -138,7 +138,7 @@
                     var test = model.rules[rule];
 
                     switch (test && test.constructor || undefined) {
-                        case Function: return promisify(test(control.$viewValue, arg), rule);
+                        case Function: return promisify(test(control.$viewValue, arg, control), rule);
                         case RegExp: return test.test(control.$viewValue) && $q.when(rule) || $q.reject(rule);
                         default:
                             console.error("Angular-Validity - Error: undefined rule", rule, control.$element);
