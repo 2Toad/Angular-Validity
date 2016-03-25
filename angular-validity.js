@@ -3,7 +3,7 @@
  * Copyright (c)2015 2Toad, LLC
  * https://github.com/2Toad/Angular-Validity
  *
- * Version: 1.2.0
+ * Version: 1.3.0
  * License: MIT
  */
 

@@ -1,3 +1,9 @@
+# 1.3.0
+
+## Improvements
+
+* **Angular**: change dependencies to require ~1.5
+
 # 1.2.0
 
 ## Improvements
