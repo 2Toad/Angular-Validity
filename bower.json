@@ -3,6 +3,6 @@
   "version": "1.2.0",
   "main": "./angular-validity.js",
   "dependencies": {
-    "angular": "~1.4"
+    "angular": "~1.5"
   }
 }
