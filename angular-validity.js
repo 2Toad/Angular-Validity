@@ -22,12 +22,10 @@
 
     .provider("validity", function () {
         var $q,
-            $log,
             model = getProviderModel();
 
         function initialize($injector) {
             $q = $injector.get("$q");
-            $log = $injector.get("$log");
         }
 
         this.$get = ["$injector",
@@ -142,7 +140,9 @@
                     switch (test && test.constructor || undefined) {
                         case Function: return promisify(test(control.$viewValue, arg, control), rule);
                         case RegExp: return test.test(control.$viewValue) && $q.when(rule) || $q.reject(rule);
-                        default: throw new Error("Undefined \"" + rule + "\" rule on \"" + control.$element[0].name + "\" element");
+                        default:
+                            console.error("Angular-Validity - Error: undefined rule", rule, control.$element);
+                            return $q.reject();
                     }
 
                     function promisify(result, rule) {
@@ -172,7 +172,7 @@
                     showToggle(control, rule);
                     showTarget(control, rule);
 
-                    model.options.debug && $log.info("Angular-Validity: result=valid, element=" + control.$name + ", rule=" + rule);
+                    model.options.debug && console.info("Angular-Validity - Info: valid", control.$name, rule);
                 });
 
                 showLabel(control);
@@ -193,7 +193,7 @@
 
                 model.callbacks.invalid && model.callbacks.invalid(control);
 
-                model.options.debug && $log.info("Angular-Validity: result=invalid, element=" + control.$name + ", rule=" + rule);
+                model.options.debug && console.info("Angular-Validity - Info: invalid", control.$name, rule);
 
                 return $q.reject();
             }
@@ -282,7 +282,7 @@
 
             switch (model.options.style) {
                 case "Bootstrap3": return bootstrap3(control, state);
-                default: throw new Error("Unsupported style: " + model.options.style);
+                default: return console.error("Angular-Validity - Error: invalid style", model.options.style);
             }
 
             function bootstrap3(control, state) {
@@ -292,7 +292,7 @@
                     case "valid": return formGroup.removeClass("has-error").addClass("has-success");
                     case "invalid": return formGroup.removeClass("has-success").addClass("has-error");
                     case "reset": return formGroup.removeClass("has-error").removeClass("has-success");
-                    default: throw new Error("Invalid state: " + state);
+                    default: return console.error("Angular-Validity - Error: invalid state", state);
                 }
             }
         }
@@ -325,8 +325,8 @@
 
     angular.module("validityDirective", [])
 
-    .directive("validity", ["validity", "$window", "$log",
-        function (validity, $window, $log) {
+    .directive("validity", ["validity",
+        function (validity) {
             return {
                 restrict: "A",
                 require: ["^form", "ngModel"],
@@ -337,7 +337,7 @@
 
                     options.debug && healthCheck($element, attrs);
 
-                    !formCtrl.$vid && setValidityId(formCtrl, $($window.form));
+                    !formCtrl.$vid && setValidityId(formCtrl, $(form));
                     setValidityId(modelCtrl, $element);
                     modelCtrl.$validityToggles = {};
 
@@ -356,8 +356,8 @@
             };
 
             function healthCheck($element, attrs) {
-                !attrs.validity && $log.warn("Angular-Validity: element is missing \"validity\" rules:", $element);
-                !attrs.name && $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+                !attrs.validity && console.error("Angular-Validity - Error: element is missing \"validity\" rules", $element);
+                !attrs.name && console.error("Angular-Validity - Error: element is missing \"name\" attribute", $element);
             }
 
             function setValidityId(ctrl, $element) {
@@ -393,8 +393,8 @@
 
     angular.module("validityLabelDirective", [])
 
-    .directive("validityLabel", ["validity", "$log",
-        function (validity, $log) {
+    .directive("validityLabel", ["validity",
+        function (validity) {
             return {
                 restrict: "E",
                 require: "^form",
@@ -416,14 +416,14 @@
 
                 switch (style) {
                     case "Bootstrap3": return $element.addClass("help-block");
-                    default: throw new Error("Unsupported style: " + style);
+                    default: return console.error("Angular-Validity - Error: invalid style", style);
                 }
             }
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.for
-                    ? $log.warn("Angular-Validity: element is missing \"for\" attribute", $element)
-                    : !forControl && $log.warn("Angular-Validity: no matching element with name=\"" + attrs.for + "\" on the parent form", $element);
+                    ? console.error("Angular-Validity - Error: element is missing \"for\" attribute", $element)
+                    : !forControl && console.error("Angular-Validity - Error: no matching element with name=\"" + attrs.for + "\" on the parent form", $element);
             }
         }
     ]);
@@ -434,8 +434,8 @@
 
     angular.module("validityToggleDirective", [])
 
-    .directive("validityToggle", ["validity", "$log",
-        function (validity, $log) {
+    .directive("validityToggle", ["validity",
+        function (validity) {
             return {
                 restrict: "A",
                 require: "^form",
@@ -451,9 +451,9 @@
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.vtFor
-                    ? $log.warn("Angular-Validity: element is missing \"vt-for\" attribute", $element)
-                    : !forControl && $log.warn("Angular-Validity: no matching element with name=\"" + attrs.vtFor + "\" on the parent form", $element);
-                !attrs.vtRule && $log.warn("Angular-Validity: element is missing \"vt-rule\" attribute", $element);
+                    ? console.error("Angular-Validity - Error: element is missing \"vt-for\" attribute", $element)
+                    : !forControl && console.error("Angular-Validity - Error: no matching element with name=\"" + attrs.vtFor + "\" on the parent form", $element);
+                !attrs.vtRule && console.error("Angular-Validity - Error: element is missing \"vt-rule\" attribute", $element);
             }
         }
     ]);
