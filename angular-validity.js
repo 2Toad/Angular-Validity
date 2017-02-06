@@ -7,19 +7,31 @@
  * License: MIT
  */
 
-(function () {
+ (function(root, factory) {
+   "use strict";
+
+   /* global define, module */
+   if (typeof define === "function" && define.amd) {
+     // AMD
+     define(["angular"], factory);
+   } else if (typeof module === "object" && module.exports) {
+     // CommonJS
+     var angular = root.angular || window.angular || require("angular"); // eslint-disable-line
+     module.exports = factory(angular);
+   } else {
+     // Vanilla
+     root.ttAngular = factory(root.angular);
+   }
+ }(this, function(angular) {
     "use strict";
+
+    extendJQLite();
 
     angular.module("ttValidity", ["validityProvider", "validityDirective", "validityLabelDirective",
         "validityToggleDirective"
     ]);
-}());
-
-(function () {
-    "use strict";
 
     angular.module("validityProvider", [])
-
     .provider("validity", function () {
         var $q,
             $log,
@@ -142,7 +154,7 @@
                     switch (test && test.constructor || undefined) {
                         case Function: return promisify(test(control.$viewValue, arg, control), rule);
                         case RegExp: return test.test(control.$viewValue) && $q.when(rule) || $q.reject(rule);
-                        default: throw new Error("Undefined \"" + rule + "\" rule on \"" + control.$element[0].name + "\" element");
+                        default: throw new Error("Undefined \"" + rule + "\" rule on \"" + control.element.name + "\" element");
                     }
 
                     function promisify(result, rule) {
@@ -219,8 +231,9 @@
                 return {
                     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     eval: function (value, arg, control) {
-                        var scope = control.$element.scope();
-                        var expression = control.$element.attr("validity-eval");
+                        var $element = angular.element(control.element);
+                        var scope = $element.scope();
+                        var expression = $element.attr("validity-eval");
                         return scope.$eval(expression);
                     },
                     max: function (value, max) {
@@ -242,7 +255,9 @@
         }
 
         function getControlRules(control) {
-            return control.$element.attr("validity").split(" ");
+            return angular.element(control.element)
+                .attr("validity")
+                .split(" ");
         }
 
         function resetControl(control, rules) {
@@ -263,8 +278,8 @@
         }
 
         function showTarget(control, rule, display) {
-            var target = control.$element.attr("validity-target-" + rule);
-            target && $(target).toggle(display || false);
+            var $target = angular.element(control.element).attr("validity-target-" + rule);
+            $target && $target.toggle(display || false);
         }
 
         function showLabel(control, rule) {
@@ -272,7 +287,7 @@
 
             if (!rule) control.$validityLabel.hide();
             else {
-                var message = control.$element.attr("validity-message-" + rule);
+                var message = angular.element(control.element).attr("validity-message-" + rule);
                 message && control.$validityLabel.html(message).show();
             }
         }
@@ -286,12 +301,12 @@
             }
 
             function bootstrap3(control, state) {
-                var formGroup = control.$element.parents(".form-group:first");
+                var $formGroup = angular.element(control.element.querySelector(".form-group:first-child"));
 
                 switch (state) {
-                    case "valid": return formGroup.removeClass("has-error").addClass("has-success");
-                    case "invalid": return formGroup.removeClass("has-success").addClass("has-error");
-                    case "reset": return formGroup.removeClass("has-error").removeClass("has-success");
+                    case "valid": return $formGroup.removeClass("has-error").addClass("has-success");
+                    case "invalid": return $formGroup.removeClass("has-success").addClass("has-error");
+                    case "reset": return $formGroup.removeClass("has-error").removeClass("has-success");
                     default: throw new Error("Invalid state: " + state);
                 }
             }
@@ -303,14 +318,14 @@
             return control ? [controls[control.$vid]] : controls;
 
             function cacheControls(form) {
-                var $elements = $("form[vid=" + form.$vid + "] [vid]"),
+                var formEl = document.querySelector("[vid=" + form.$vid + "]"),
                     controls = {};
 
                 for (var i in form) {
                     if (form.hasOwnProperty(i) && i[0] !== "$") {
                         var control = form[i];
-                        control.$element = $elements.filter($("[vid=" + control.$vid + "]"));
-                        if (control.$element[0]) controls[control.$vid] = control;
+                        control.element = formEl.querySelector("[vid=" + control.$vid + "]");
+                        if (control.element) controls[control.$vid] = control;
                     }
                 }
 
@@ -318,13 +333,8 @@
             }
         }
     });
-}());
-
-(function () {
-    "use strict";
 
     angular.module("validityDirective", [])
-
     .directive("validity", ["validity", "$window", "$log",
         function (validity, $window, $log) {
             return {
@@ -337,7 +347,7 @@
 
                     options.debug && healthCheck($element, attrs);
 
-                    !formCtrl.$vid && setValidityId(formCtrl, $($window.form));
+                    !formCtrl.$vid && setValidityId(formCtrl, angular.element($window.form));
                     setValidityId(modelCtrl, $element);
                     modelCtrl.$validityToggles = {};
 
@@ -365,19 +375,15 @@
                 $element.attr("vid", ctrl.$vid);
 
                 function uuid() {
-                    return Math.random().toString(36).substring(2, 15) +
-                        Math.random().toString(36).substring(2, 15);
+                    var id1 = Math.random().toString(36),
+                      id2 = Math.random().toString(36);
+                    return "av" + id1.substring(2, 15) + id2.substring(2, 15);
                 }
             }
         }
     ]);
-}());
-
-(function () {
-    "use strict";
 
     angular.module("validityLabelDirective", [])
-
     .directive("validityLabel", ["validity", "$log",
         function (validity, $log) {
             return {
@@ -412,13 +418,8 @@
             }
         }
     ]);
-}());
-
-(function () {
-    "use strict";
 
     angular.module("validityToggleDirective", [])
-
     .directive("validityToggle", ["validity", "$log",
         function (validity, $log) {
             return {
@@ -442,4 +443,22 @@
             }
         }
     ]);
-}());
+
+    function extendJQLite() {
+      angular.element.prototype.hide = function() {
+        var element = this[0];
+        element.jqlDisplay = element.style.display;
+        element.style.display = "none";
+      };
+
+      angular.element.prototype.show = function() {
+        var element = this[0];
+        element.jqlDisplay = element.jqlDisplay || "none";
+        element.style.display = element.jqlDisplay !== "none" && element.jqlDisplay || "block";
+      };
+
+      angular.element.prototype.toggle = function(display) {
+        display ? this.show() : this.hide();
+      };
+    }
+}));

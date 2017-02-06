@@ -36,13 +36,13 @@ or with Bower:
 var exampleApp = angular.module("exampleApp", ["ttValidity"]);
 ```
 
-##### Browserify / Webpack
+##### CommonJS
 
-If you're using Browserify or Webpack, you can do something like:
+If you're using CommonJS (e.g., Browserify, webpack), you can do something like:
 
 ```js
-var validity = require("angular-validity");
-var exampleApp = angular.module("exampleApp", [validity]);
+require("angular-validity");
+var exampleApp = angular.module("exampleApp", ["ttValidity"]);
 ```
 
 ### Configuration
