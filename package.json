@@ -18,7 +18,13 @@
     "url": "https://github.com/2Toad/Angular-Validity/issues"
   },
   "homepage": "https://github.com/2Toad/Angular-Validity",
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "angular": "~1.5"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
   }
 }
