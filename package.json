@@ -1,6 +1,6 @@
 {
   "name": "angular-validity",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Validation framework for AngularJS",
   "main": "angular-validity.js",
   "repository": {
