@@ -8,41 +8,41 @@
  */
 
  (function(root, factory) {
-   "use strict";
+   'use strict';
 
    /* global define, module */
-   if (typeof define === "function" && define.amd) {
+   if (typeof define === 'function' && define.amd) {
      // AMD
-     define(["angular"], factory);
-   } else if (typeof module === "object" && module.exports) {
+     define(['angular'], factory);
+   } else if (typeof module === 'object' && module.exports) {
      // CommonJS
-     var angular = root.angular || window.angular || require("angular"); // eslint-disable-line
+     var angular = root.angular || window.angular || require('angular'); // eslint-disable-line
      module.exports = factory(angular);
    } else {
      // Vanilla
      root.ttAngular = factory(root.angular);
    }
  }(this, function(angular) {
-    "use strict";
+    'use strict';
 
     extendJQLite();
 
-    angular.module("ttValidity", ["validityProvider", "validityDirective", "validityLabelDirective",
-        "validityToggleDirective"
+    angular.module('ttValidity', ['validityProvider', 'validityDirective', 'validityLabelDirective',
+        'validityToggleDirective'
     ]);
 
-    angular.module("validityProvider", [])
-    .provider("validity", function () {
+    angular.module('validityProvider', [])
+    .provider('validity', function () {
         var $q,
             $log,
             model = getProviderModel();
 
         function initialize($injector) {
-            $q = $injector.get("$q");
-            $log = $injector.get("$log");
+            $q = $injector.get('$q');
+            $log = $injector.get('$log');
         }
 
-        this.$get = ["$injector",
+        this.$get = ['$injector',
             function ($injector) {
                 initialize($injector);
 
@@ -93,7 +93,7 @@
 
         this.state = function (form) {
             var controls = form && model.controls[form.$vid];
-            return !controls ? "unvalidated" : getState(controls, form.$submitted);
+            return !controls ? 'unvalidated' : getState(controls, form.$submitted);
 
             function getState(controls, submitted) {
                 var untouched = 0,
@@ -106,9 +106,9 @@
                     control.$invalid && invalid++;
                 }
 
-                return !submitted && (!touched && "unvalidated" || untouched && "partial")
-                    || invalid && "invalid"
-                    || "valid";
+                return !submitted && (!touched && 'unvalidated' || untouched && 'partial')
+                    || invalid && 'invalid'
+                    || 'valid';
             }
         };
 
@@ -141,9 +141,9 @@
                     requiredTest;
 
                 rules.forEach(function (rule) {
-                    var rv = rule.split("=");
+                    var rv = rule.split('=');
                     var test = validateRule(control, rv[0], rv[1]);
-                    requiredTest || rv[0] !== "required" ? tests.push(test) : requiredTest = test;
+                    requiredTest || rv[0] !== 'required' ? tests.push(test) : requiredTest = test;
                 });
 
                 return $q.when(requiredTest).then(executeRemainingTests);
@@ -154,7 +154,7 @@
                     switch (test && test.constructor || undefined) {
                         case Function: return promisify(test(control.$viewValue, arg, control), rule);
                         case RegExp: return test.test(control.$viewValue) && $q.when(rule) || $q.reject(rule);
-                        default: throw new Error("Undefined \"" + rule + "\" rule on \"" + control.element.name + "\" element");
+                        default: throw new Error('Undefined "' + rule + '" rule on "' + control.element.name + '" element');
                     }
 
                     function promisify(result, rule) {
@@ -184,11 +184,11 @@
                     showToggle(control, rule);
                     showTarget(control, rule);
 
-                    model.options.debug && $log.info("Angular-Validity: result=valid, element=" + control.$name + ", rule=" + rule);
+                    model.options.debug && $log.info('Angular-Validity: result=valid, element=' + control.$name + ', rule=' + rule);
                 });
 
                 showLabel(control);
-                applyStyle(control, "valid");
+                applyStyle(control, 'valid');
 
                 model.callbacks.valid && model.callbacks.valid(control);
 
@@ -201,11 +201,11 @@
                 showLabel(control, rule);
                 showToggle(control, rule, true);
                 showTarget(control, rule, true);
-                applyStyle(control, "invalid");
+                applyStyle(control, 'invalid');
 
                 model.callbacks.invalid && model.callbacks.invalid(control);
 
-                model.options.debug && $log.info("Angular-Validity: result=invalid, element=" + control.$name + ", rule=" + rule);
+                model.options.debug && $log.info('Angular-Validity: result=invalid, element=' + control.$name + ', rule=' + rule);
 
                 return $q.reject();
             }
@@ -221,7 +221,7 @@
                 options: {
                     cache: true,
                     debug: false,
-                    event: "blur",
+                    event: 'blur',
                     style: null
                 },
                 rules: getValidationRules()
@@ -233,18 +233,18 @@
                     eval: function (value, arg, control) {
                         var $element = angular.element(control.element);
                         var scope = $element.scope();
-                        var expression = $element.attr("validity-eval");
+                        var expression = $element.attr('validity-eval');
                         return scope.$eval(expression);
                     },
                     max: function (value, max) {
-                        return typeof value === "number"
+                        return typeof value === 'number'
                             ? value <= max
-                            : typeof value !== "string" || value.length <= max;
+                            : typeof value !== 'string' || value.length <= max;
                     },
                     min: function (value, min) {
-                        return typeof value === "number"
+                        return typeof value === 'number'
                             ? value >= min
-                            : typeof value !== "string" || value.length >= min;
+                            : typeof value !== 'string' || value.length >= min;
                     },
                     number: /^\d+$/,
                     required: function (value) {
@@ -256,8 +256,8 @@
 
         function getControlRules(control) {
             return angular.element(control.element)
-                .attr("validity")
-                .split(" ");
+                .attr('validity')
+                .split(' ');
         }
 
         function resetControl(control, rules) {
@@ -269,7 +269,7 @@
             });
 
             showLabel(control);
-            applyStyle(control, "reset");
+            applyStyle(control, 'reset');
         }
 
         function showToggle(control, rule, display) {
@@ -278,7 +278,7 @@
         }
 
         function showTarget(control, rule, display) {
-            var $target = angular.element(control.element).attr("validity-target-" + rule);
+            var $target = angular.element(control.element).attr('validity-target-' + rule);
             $target && $target.toggle(display || false);
         }
 
@@ -287,7 +287,7 @@
 
             if (!rule) control.$validityLabel.hide();
             else {
-                var message = angular.element(control.element).attr("validity-message-" + rule);
+                var message = angular.element(control.element).attr('validity-message-' + rule);
                 message && control.$validityLabel.html(message).show();
             }
         }
@@ -296,18 +296,18 @@
             if (!model.options.style) return;
 
             switch (model.options.style) {
-                case "Bootstrap3": return bootstrap3(control, state);
-                default: throw new Error("Unsupported style: " + model.options.style);
+                case 'Bootstrap3': return bootstrap3(control, state);
+                default: throw new Error('Unsupported style: ' + model.options.style);
             }
 
             function bootstrap3(control, state) {
-                var $formGroup = angular.element(control.element.querySelector(".form-group:first-child"));
+                var $formGroup = angular.element(control.element.querySelector('.form-group:first-child'));
 
                 switch (state) {
-                    case "valid": return $formGroup.removeClass("has-error").addClass("has-success");
-                    case "invalid": return $formGroup.removeClass("has-success").addClass("has-error");
-                    case "reset": return $formGroup.removeClass("has-error").removeClass("has-success");
-                    default: throw new Error("Invalid state: " + state);
+                    case 'valid': return $formGroup.removeClass('has-error').addClass('has-success');
+                    case 'invalid': return $formGroup.removeClass('has-success').addClass('has-error');
+                    case 'reset': return $formGroup.removeClass('has-error').removeClass('has-success');
+                    default: throw new Error('Invalid state: ' + state);
                 }
             }
         }
@@ -318,13 +318,13 @@
             return control ? [controls[control.$vid]] : controls;
 
             function cacheControls(form) {
-                var formEl = document.querySelector("[vid=" + form.$vid + "]"),
+                var formEl = document.querySelector('[vid=' + form.$vid + ']'),
                     controls = {};
 
                 for (var i in form) {
-                    if (form.hasOwnProperty(i) && i[0] !== "$") {
+                    if (form.hasOwnProperty(i) && i[0] !== '$') {
                         var control = form[i];
-                        control.element = formEl.querySelector("[vid=" + control.$vid + "]");
+                        control.element = formEl.querySelector('[vid=' + control.$vid + ']');
                         if (control.element) controls[control.$vid] = control;
                     }
                 }
@@ -334,12 +334,12 @@
         }
     });
 
-    angular.module("validityDirective", [])
-    .directive("validity", ["validity", "$window", "$log",
+    angular.module('validityDirective', [])
+    .directive('validity', ['validity', '$window', '$log',
         function (validity, $window, $log) {
             return {
-                restrict: "A",
-                require: ["^form", "ngModel"],
+                restrict: 'A',
+                require: ['^form', 'ngModel'],
                 link: function (scope, $element, attrs, ctrls) {
                     var formCtrl = ctrls[0],
                         modelCtrl = ctrls[1],
@@ -351,7 +351,7 @@
                     setValidityId(modelCtrl, $element);
                     modelCtrl.$validityToggles = {};
 
-                    if (attrs.validityEvent === "watch") {
+                    if (attrs.validityEvent === 'watch') {
                         scope.$watch(attrs.ngModel, function () {
                             !modelCtrl.$pristine && validity.validate(formCtrl, modelCtrl);
                         });
@@ -366,29 +366,29 @@
             };
 
             function healthCheck($element, attrs) {
-                !attrs.validity && $log.warn("Angular-Validity: element is missing \"validity\" rules:", $element);
-                !attrs.name && $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+                !attrs.validity && $log.warn('Angular-Validity: element is missing "validity" rules:', $element);
+                !attrs.name && $log.warn('Angular-Validity: element is missing "name" attribute:', $element);
             }
 
             function setValidityId(ctrl, $element) {
                 ctrl.$vid = uuid();
-                $element.attr("vid", ctrl.$vid);
+                $element.attr('vid', ctrl.$vid);
 
                 function uuid() {
                     var id1 = Math.random().toString(36),
                       id2 = Math.random().toString(36);
-                    return "av" + id1.substring(2, 15) + id2.substring(2, 15);
+                    return 'av' + id1.substring(2, 15) + id2.substring(2, 15);
                 }
             }
         }
     ]);
 
-    angular.module("validityLabelDirective", [])
-    .directive("validityLabel", ["validity", "$log",
+    angular.module('validityLabelDirective', [])
+    .directive('validityLabel', ['validity', '$log',
         function (validity, $log) {
             return {
-                restrict: "E",
-                require: "^form",
+                restrict: 'E',
+                require: '^form',
                 link: function (scope, $element, attrs, formCtrl) {
                     $element.hide();
 
@@ -406,25 +406,25 @@
                 if (!style) return;
 
                 switch (style) {
-                    case "Bootstrap3": return $element.addClass("help-block");
-                    default: throw new Error("Unsupported style: " + style);
+                    case 'Bootstrap3': return $element.addClass('help-block');
+                    default: throw new Error('Unsupported style: ' + style);
                 }
             }
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.for
-                    ? $log.warn("Angular-Validity: element is missing \"for\" attribute", $element)
-                    : !forControl && $log.warn("Angular-Validity: no matching element with name=\"" + attrs.for + "\" on the parent form", $element);
+                    ? $log.warn('Angular-Validity: element is missing "for" attribute', $element)
+                    : !forControl && $log.warn('Angular-Validity: no matching element with name="' + attrs.for + '" on the parent form', $element);
             }
         }
     ]);
 
-    angular.module("validityToggleDirective", [])
-    .directive("validityToggle", ["validity", "$log",
+    angular.module('validityToggleDirective', [])
+    .directive('validityToggle', ['validity', '$log',
         function (validity, $log) {
             return {
-                restrict: "A",
-                require: "^form",
+                restrict: 'A',
+                require: '^form',
                 link: function (scope, $element, attrs, formCtrl) {
                     $element.hide();
 
@@ -437,9 +437,9 @@
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.vtFor
-                    ? $log.warn("Angular-Validity: element is missing \"vt-for\" attribute", $element)
-                    : !forControl && $log.warn("Angular-Validity: no matching element with name=\"" + attrs.vtFor + "\" on the parent form", $element);
-                !attrs.vtRule && $log.warn("Angular-Validity: element is missing \"vt-rule\" attribute", $element);
+                    ? $log.warn('Angular-Validity: element is missing "vt-for" attribute', $element)
+                    : !forControl && $log.warn('Angular-Validity: no matching element with name="' + attrs.vtFor + '" on the parent form', $element);
+                !attrs.vtRule && $log.warn('Angular-Validity: element is missing "vt-rule" attribute', $element);
             }
         }
     ]);
@@ -448,13 +448,13 @@
       angular.element.prototype.hide = function() {
         var element = this[0];
         element.jqlDisplay = element.style.display;
-        element.style.display = "none";
+        element.style.display = 'none';
       };
 
       angular.element.prototype.show = function() {
         var element = this[0];
-        element.jqlDisplay = element.jqlDisplay || "none";
-        element.style.display = element.jqlDisplay !== "none" && element.jqlDisplay || "block";
+        element.jqlDisplay = element.jqlDisplay || 'none';
+        element.style.display = element.jqlDisplay !== 'none' && element.jqlDisplay || 'block';
       };
 
       angular.element.prototype.toggle = function(display) {
