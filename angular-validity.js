@@ -184,7 +184,7 @@
                     showToggle(control, rule);
                     showTarget(control, rule);
 
-                    model.options.debug && $log.info('Angular-Validity: result=valid, element=' + control.$name + ', rule=' + rule);
+                    model.options.debug && $log.info('Angular-Validity: result=valid, element=%s, rule=%s', control.$name, rule);
                 });
 
                 showLabel(control);
@@ -205,7 +205,7 @@
 
                 model.callbacks.invalid && model.callbacks.invalid(control);
 
-                model.options.debug && $log.info('Angular-Validity: result=invalid, element=' + control.$name + ', rule=' + rule);
+                model.options.debug && $log.info('Angular-Validity: result=invalid, element=%s, rule=%s', control.$name, rule);
 
                 return $q.reject();
             }
@@ -366,8 +366,8 @@
             };
 
             function healthCheck($element, attrs) {
-                !attrs.validity && $log.warn('Angular-Validity: element is missing "validity" rules:', $element);
-                !attrs.name && $log.warn('Angular-Validity: element is missing "name" attribute:', $element);
+                !attrs.validity && $log.warn('Angular-Validity: element is missing "validity" rules: %o', $element);
+                !attrs.name && $log.warn('Angular-Validity: element is missing "name" attribute: %o', $element);
             }
 
             function setValidityId(ctrl, $element) {
@@ -413,8 +413,8 @@
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.for
-                    ? $log.warn('Angular-Validity: element is missing "for" attribute', $element)
-                    : !forControl && $log.warn('Angular-Validity: no matching element with name="' + attrs.for + '" on the parent form', $element);
+                    ? $log.warn('Angular-Validity: element is missing "for" attribute: %o', $element)
+                    : !forControl && $log.warn('Angular-Validity: no matching element with name="%s" on the parent form: %o', attrs.for, $element);
             }
         }
     ]);
@@ -437,9 +437,9 @@
 
             function healthCheck($element, attrs, forControl) {
                 !attrs.vtFor
-                    ? $log.warn('Angular-Validity: element is missing "vt-for" attribute', $element)
-                    : !forControl && $log.warn('Angular-Validity: no matching element with name="' + attrs.vtFor + '" on the parent form', $element);
-                !attrs.vtRule && $log.warn('Angular-Validity: element is missing "vt-rule" attribute', $element);
+                    ? $log.warn('Angular-Validity: element is missing "vt-for" attribute: %o', $element)
+                    : !forControl && $log.warn('Angular-Validity: no matching element with name="%s" on the parent form: %o', attrs.vtFor, $element);
+                !attrs.vtRule && $log.warn('Angular-Validity: element is missing "vt-rule" attribute: %o', $element);
             }
         }
     ]);
