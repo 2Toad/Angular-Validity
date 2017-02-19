@@ -21,6 +21,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "./node_modules/.bin/karma start ./test/karma.conf.js --single-run",
+    "test-watch": "./node_modules/.bin/karma start ./test/karma.conf.js",
     "cover": "istanbul cover ./angular-validity.js"
   },
   "dependencies": {
@@ -32,7 +33,6 @@
     "istanbul": "^0.4.5",
     "jasmine-core": "^2.5.2",
     "karma": "^1.4.1",
-    "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2"

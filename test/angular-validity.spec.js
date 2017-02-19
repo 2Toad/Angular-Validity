@@ -3,7 +3,7 @@
 describe('validity', function() {
   var provider;
 
-  beforeEach(angular.mock.module('ttValidity'));
+  beforeEach(module('ttValidity'));
 
   beforeEach(inject(function(validity) {
     provider = validity;
