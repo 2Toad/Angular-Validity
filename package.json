@@ -20,15 +20,21 @@
   "homepage": "https://github.com/2Toad/Angular-Validity",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha",
-    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha"
+    "test": "./node_modules/.bin/karma start ./test/karma.conf.js --single-run",
+    "test-watch": "./node_modules/.bin/karma start ./test/karma.conf.js",
+    "cover": "istanbul cover ./angular-validity.js"
   },
   "dependencies": {
     "angular": "~1.5"
   },
   "devDependencies": {
+    "angular-mocks": "^1.6.2",
     "eslint": "^3.15.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.4.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.2"
   }
 }
