@@ -278,8 +278,11 @@
         }
 
         function showTarget(control, rule, display) {
-            var $target = angular.element(control.element).attr("validity-target-" + rule);
-            $target && $target.toggle(display || false);
+            var target = angular.element(control.element).attr("validity-target-" + rule);
+            if (target) {
+                var element = document.querySelector(target);
+                element && angular.element(element).toggle(display || false);
+            }
         }
 
         function showLabel(control, rule) {
