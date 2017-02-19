@@ -9,7 +9,7 @@ module.exports = function(config) {
       '../node_modules/angular-ui-router/release/angular-ui-router.js',
       '../node_modules/angular-mocks/angular-mocks.js',
       '../angular-validity.js',
-      './angular-validity.spec.js'
+      './*.spec.js'
     ],
     preprocessors: {'../angular-validity.js': ['coverage']},
     reporters: ['progress', 'coverage'],
