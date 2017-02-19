@@ -32,7 +32,7 @@
     ]);
 
     angular.module('validityProvider', [])
-    .provider('validity', function () {
+    .provider('validity', function() {
         var $q,
             $log,
             model = getProviderModel();
@@ -43,7 +43,7 @@
         }
 
         this.$get = ['$injector',
-            function ($injector) {
+            function($injector) {
                 initialize($injector);
 
                 return {
@@ -57,26 +57,26 @@
             }
         ];
 
-        this.callbacks = function (config) {
+        this.callbacks = function(config) {
             if (!config) return model.callbacks;
 
             angular.merge(model.callbacks, config);
             return this;
         };
 
-        this.options = function (config) {
+        this.options = function(config) {
             if (!config) return model.options;
 
             angular.merge(model.options, config);
             return this;
         };
 
-        this.reset = function (form) {
+        this.reset = function(form) {
             form.$setPristine();
             form.$setUntouched();
 
             var controls = model.controls[form.$vid];
-            angular.forEach(controls, function (control) {
+            angular.forEach(controls, function(control) {
                 var rules = getControlRules(control);
                 resetControl(control, rules);
             });
@@ -84,14 +84,14 @@
             return this;
         };
 
-        this.rules = function (config) {
+        this.rules = function(config) {
             if (!config) return model.rules;
 
             angular.merge(model.rules, config);
             return this;
         };
 
-        this.state = function (form) {
+        this.state = function(form) {
             var controls = form && model.controls[form.$vid];
             return !controls ? 'unvalidated' : getState(controls, form.$submitted);
 
@@ -112,11 +112,11 @@
             }
         };
 
-        this.validate = function (form, control) {
+        this.validate = function(form, control) {
             var controls = getValidityControls(form, control),
                 validationTests = [];
 
-            angular.forEach(controls, function (control) {
+            angular.forEach(controls, function(control) {
                 var rules = getControlRules(control);
 
                 // TODO: refactoring to set state at the individual promise level
@@ -129,10 +129,10 @@
                 });
             });
 
-            return $q.all(validationTests.map(function (vt) {
+            return $q.all(validationTests.map(function(vt) {
                 return vt.validate.then(
-                    function (rules) { return valid(form, vt.control, rules); },
-                    function (rule) { return invalid(form, vt.control, rule); }
+                    function(rules) { return valid(form, vt.control, rules); },
+                    function(rule) { return invalid(form, vt.control, rule); }
                 );
             }));
 
@@ -140,7 +140,7 @@
                 var tests = [],
                     requiredTest;
 
-                rules.forEach(function (rule) {
+                rules.forEach(function(rule) {
                     var rv = rule.split('=');
                     var test = validateRule(control, rv[0], rv[1]);
                     requiredTest || rv[0] !== 'required' ? tests.push(test) : requiredTest = test;
@@ -162,8 +162,8 @@
 
                         angular.isFunction(result.then)
                             ? result.then(
-                                    function () { deferred.resolve(rule); },
-                                    function () { deferred.reject(rule); }
+                                    function() { deferred.resolve(rule); },
+                                    function() { deferred.reject(rule); }
                                 )
                             : result && deferred.resolve(rule) || deferred.reject(rule);
 
@@ -172,14 +172,14 @@
                 }
 
                 function executeRemainingTests(required) {
-                    return $q.all(tests).then(function (rules) {
+                    return $q.all(tests).then(function(rules) {
                         return required && rules.concat(required) || rules;
                     });
                 }
             }
 
             function valid(form, control, rules) {
-                rules.forEach(function (rule) {
+                rules.forEach(function(rule) {
                     control.$setValidity(rule, true);
                     showToggle(control, rule);
                     showTarget(control, rule);
@@ -230,24 +230,24 @@
             function getValidationRules() {
                 return {
                     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    eval: function (value, arg, control) {
+                    eval: function(value, arg, control) {
                         var $element = angular.element(control.element);
                         var scope = $element.scope();
                         var expression = $element.attr('validity-eval');
                         return scope.$eval(expression);
                     },
-                    max: function (value, max) {
+                    max: function(value, max) {
                         return typeof value === 'number'
                             ? value <= max
                             : typeof value !== 'string' || value.length <= max;
                     },
-                    min: function (value, min) {
+                    min: function(value, min) {
                         return typeof value === 'number'
                             ? value >= min
                             : typeof value !== 'string' || value.length >= min;
                     },
                     number: /^\d+$/,
-                    required: function (value) {
+                    required: function(value) {
                         return !!value;
                     }
                 };
@@ -261,7 +261,7 @@
         }
 
         function resetControl(control, rules) {
-            rules.forEach(function (rule) {
+            rules.forEach(function(rule) {
                 control.$setPristine();
                 control.$setValidity(rule, true);
                 showToggle(control, rule);
@@ -336,11 +336,11 @@
 
     angular.module('validityDirective', [])
     .directive('validity', ['validity', '$window', '$log',
-        function (validity, $window, $log) {
+        function(validity, $window, $log) {
             return {
                 restrict: 'A',
                 require: ['^form', 'ngModel'],
-                link: function (scope, $element, attrs, ctrls) {
+                link: function(scope, $element, attrs, ctrls) {
                     var formCtrl = ctrls[0],
                         modelCtrl = ctrls[1],
                         options = validity.options();
@@ -352,13 +352,13 @@
                     modelCtrl.$validityToggles = {};
 
                     if (attrs.validityEvent === 'watch') {
-                        scope.$watch(attrs.ngModel, function () {
+                        scope.$watch(attrs.ngModel, function() {
                             !modelCtrl.$pristine && validity.validate(formCtrl, modelCtrl);
                         });
                     } else {
                         var event = attrs.validityEvent || options.event;
 
-                        $element.bind(event, function () {
+                        $element.bind(event, function() {
                             validity.validate(formCtrl, modelCtrl);
                         });
                     }
@@ -385,11 +385,11 @@
 
     angular.module('validityLabelDirective', [])
     .directive('validityLabel', ['validity', '$log',
-        function (validity, $log) {
+        function(validity, $log) {
             return {
                 restrict: 'E',
                 require: '^form',
-                link: function (scope, $element, attrs, formCtrl) {
+                link: function(scope, $element, attrs, formCtrl) {
                     $element.hide();
 
                     var options = validity.options();
@@ -421,11 +421,11 @@
 
     angular.module('validityToggleDirective', [])
     .directive('validityToggle', ['validity', '$log',
-        function (validity, $log) {
+        function(validity, $log) {
             return {
                 restrict: 'A',
                 require: '^form',
-                link: function (scope, $element, attrs, formCtrl) {
+                link: function(scope, $element, attrs, formCtrl) {
                     $element.hide();
 
                     var forControl = formCtrl[attrs.vtFor];
