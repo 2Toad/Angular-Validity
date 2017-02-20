@@ -369,6 +369,7 @@
             };
 
             function healthCheck(formCtrl, $element, attrs) {
+                !formCtrl.$name && $log.warn("Angular-Validity: form is missing \"name\" attribute:", formCtrl);
                 !attrs.validity && $log.warn("Angular-Validity: element is missing \"validity\" rules:", $element);
 
                 if (!attrs.name) {
