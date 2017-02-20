@@ -304,7 +304,7 @@
             }
 
             function bootstrap3(control, state) {
-                var $formGroup = angular.element(control.element.querySelector(".form-group:first-child"));
+                var $formGroup = angular.element(control.element.closest(".form-group"));
 
                 switch (state) {
                     case "valid": return $formGroup.removeClass("has-error").addClass("has-success");
