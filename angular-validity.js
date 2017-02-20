@@ -3,7 +3,7 @@
  * Copyright (c)2015 2Toad, LLC
  * https://github.com/2Toad/Angular-Validity
  *
- * Version: 1.4.0
+ * Version: 1.4.1
  * License: MIT
  */
 
@@ -278,8 +278,11 @@
         }
 
         function showTarget(control, rule, display) {
-            var $target = angular.element(control.element).attr("validity-target-" + rule);
-            $target && $target.toggle(display || false);
+            var target = angular.element(control.element).attr("validity-target-" + rule);
+            if (target) {
+                var element = document.querySelector(target);
+                element && angular.element(element).toggle(display || false);
+            }
         }
 
         function showLabel(control, rule) {
@@ -301,7 +304,7 @@
             }
 
             function bootstrap3(control, state) {
-                var $formGroup = angular.element(control.element.querySelector(".form-group:first-child"));
+                var $formGroup = angular.element(control.element.closest(".form-group"));
 
                 switch (state) {
                     case "valid": return $formGroup.removeClass("has-error").addClass("has-success");
@@ -345,7 +348,7 @@
                         modelCtrl = ctrls[1],
                         options = validity.options();
 
-                    options.debug && healthCheck($element, attrs);
+                    options.debug && healthCheck(formCtrl, $element, attrs);
 
                     !formCtrl.$vid && setValidityId(formCtrl, angular.element($window.form));
                     setValidityId(modelCtrl, $element);
@@ -365,9 +368,17 @@
                 }
             };
 
-            function healthCheck($element, attrs) {
+            function healthCheck(formCtrl, $element, attrs) {
+                !formCtrl.$name && $log.warn("Angular-Validity: form is missing \"name\" attribute:", formCtrl);
                 !attrs.validity && $log.warn("Angular-Validity: element is missing \"validity\" rules:", $element);
-                !attrs.name && $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+
+                if (!attrs.name) {
+                  $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+                } else {
+                  var form = document.querySelector("[name=" + formCtrl.$name + "]");
+                  var elements = form.querySelectorAll("[name=" + attrs.name + "]");
+                  elements.length > 1 && $log.warn("Angular-Validity: multiple elements have identical name attribute: \"%s\"", attrs.name, elements);
+                }
             }
 
             function setValidityId(ctrl, $element) {
