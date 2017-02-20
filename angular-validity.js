@@ -348,7 +348,7 @@
                         modelCtrl = ctrls[1],
                         options = validity.options();
 
-                    options.debug && healthCheck($element, attrs);
+                    options.debug && healthCheck(formCtrl, $element, attrs);
 
                     !formCtrl.$vid && setValidityId(formCtrl, angular.element($window.form));
                     setValidityId(modelCtrl, $element);
@@ -368,9 +368,16 @@
                 }
             };
 
-            function healthCheck($element, attrs) {
+            function healthCheck(formCtrl, $element, attrs) {
                 !attrs.validity && $log.warn("Angular-Validity: element is missing \"validity\" rules:", $element);
-                !attrs.name && $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+
+                if (!attrs.name) {
+                  $log.warn("Angular-Validity: element is missing \"name\" attribute:", $element);
+                } else {
+                  var form = document.querySelector("[name=" + formCtrl.$name + "]");
+                  var elements = form.querySelectorAll("[name=" + attrs.name + "]");
+                  elements.length > 1 && $log.warn("Angular-Validity: multiple elements have identical name attribute: \"%s\"", attrs.name, elements);
+                }
             }
 
             function setValidityId(ctrl, $element) {
