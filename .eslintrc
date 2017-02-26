@@ -5,7 +5,10 @@
     "extends": "eslint:recommended",
     "globals": {
         "angular": true,
-        "$": true
+        "$": true,
+        "define",
+        "module",
+        "require"
     },
     "rules": {
         "accessor-pairs": "error",
@@ -77,7 +80,7 @@
             "declaration"
         ],
         "generator-star-spacing": "error",
-        "global-require": "error",
+        "global-require": "off",
         "guard-for-in": "off",
         "handle-callback-err": "error",
         "id-blacklist": "error",

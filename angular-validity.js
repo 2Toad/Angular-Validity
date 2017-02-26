@@ -7,7 +7,6 @@
  * License: MIT
  */
 
-/* global define, module */
 (function(root, factory) {
   'use strict';
 
@@ -16,7 +15,7 @@
     define(['angular'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS
-    var angular = root.angular || window.angular || require('angular'); // eslint-disable-line
+    var angular = root.angular || window.angular || require('angular');
     module.exports = factory(angular);
   } else {
     // Vanilla
