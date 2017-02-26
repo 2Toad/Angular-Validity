@@ -8,9 +8,9 @@ Asynchronous validation for Angular applications
 
 ---
 
-* [About](https://angular-validity.readme.io/v1.4.1/docs/welcome)
-* [Getting Started](https://angular-validity.readme.io/v1.4.1/docs/getting-started)
-* [Demos](https://angular-validity.readme.io/v1.4.1/docs/demos)
+* [About](https://angular-validity.readme.io/v1.4.2/docs/welcome)
+* [Getting Started](https://angular-validity.readme.io/v1.4.2/docs/getting-started)
+* [Demos](https://angular-validity.readme.io/v1.4.2/docs/demos)
 
 ## Quick Start
 
@@ -45,7 +45,7 @@ var exampleApp = angular.module("exampleApp", ["ttValidity"]);
 
 ### Configuration
 
-Set global [options](https://angular-validity.readme.io/v1.4.1/docs/options) for Angular-Validity within your app module's config. In this example, we're configuring Angular-Validity to use the Bootstrap 3 `style` option:
+Set global [options](https://angular-validity.readme.io/v1.4.2/docs/options) for Angular-Validity within your app module's config. In this example, we're configuring Angular-Validity to use the Bootstrap 3 `style` option:
 
 ```js
 exampleApp.config(["validityProvider", function (validityProvider) {
@@ -57,7 +57,7 @@ exampleApp.config(["validityProvider", function (validityProvider) {
 
 ### View
 
-Add a [validity](https://angular-validity.readme.io/v1.4.1/docs/validity) directive to the input elements you want to validate, and specify the validation [rules](https://angular-validity.readme.io/v1.4.1/docs/rules) you want to use. In this example, the "required" and "email" rules are being added to the email input:
+Add a [validity](https://angular-validity.readme.io/v1.4.2/docs/validity) directive to the input elements you want to validate, and specify the validation [rules](https://angular-validity.readme.io/v1.4.2/docs/rules) you want to use. In this example, the "required" and "email" rules are being added to the email input:
 
 ```html
 <section ng-controller="ExampleCtrl">
@@ -85,7 +85,7 @@ Add a `validity-message` to the input for each of the rules you added, to define
 </section>
 ```
 
-Add a [validity-label](https://angular-validity.readme.io/v1.4.1/docs/validity-label) directive to the form, and configure it to display validation messages for the email input:
+Add a [validity-label](https://angular-validity.readme.io/v1.4.2/docs/validity-label) directive to the form, and configure it to display validation messages for the email input:
 
 ```html
 <section ng-controller="ExampleCtrl">
@@ -113,7 +113,7 @@ exampleApp.controller("ExampleCtrl", ["$scope", "validity",
 ]);
 ```
 
-Call the [validate](https://angular-validity.readme.io/v1.4.1/docs/validate) function and pass in the `form` you want to validate. In this example, we've added a function called `example` and an ng-submit that calls it when the form is submitted.
+Call the [validate](https://angular-validity.readme.io/v1.4.2/docs/validate) function and pass in the `form` you want to validate. In this example, we've added a function called `example` and an ng-submit that calls it when the form is submitted.
 
 ```js
 exampleApp.controller("ExampleCtrl", ["$scope", "validity",
@@ -142,4 +142,4 @@ exampleApp.controller("ExampleCtrl", ["$scope", "validity",
 
 ### Putting it all together
 
-[Here's a working demo on JSFiddle](https://jsfiddle.net/2Toad/h7L6hcog/6/light/) of what we just put together, complete with Bootstrap 3 styling. Take it for a spin, view the HTML and JavaScript, and then fiddle around with the source.
+[Here's a working demo on JSFiddle](https://jsfiddle.net/2Toad/h7L6hcog/7/light/) of what we just put together, complete with Bootstrap 3 styling. Take it for a spin, view the HTML and JavaScript, and then fiddle around with the source.
