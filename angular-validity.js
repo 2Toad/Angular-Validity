@@ -3,7 +3,7 @@
  * Copyright (c)2015 2Toad, LLC
  * https://github.com/2Toad/Angular-Validity
  *
- * Version: 1.4.1
+ * Version: 1.4.2
  * License: MIT
  */
 
@@ -338,19 +338,20 @@
     });
 
     angular.module('validityDirective', [])
-    .directive('validity', ['validity', '$window', '$log',
-        function(validity, $window, $log) {
+    .directive('validity', ['validity', '$log',
+        function(validity, $log) {
             return {
                 restrict: 'A',
                 require: ['^form', 'ngModel'],
                 link: function(scope, $element, attrs, ctrls) {
-                    var formCtrl = ctrls[0],
+                    var formEl = $element[0].form,
+                        formCtrl = ctrls[0],
                         modelCtrl = ctrls[1],
                         options = validity.options();
 
-                    options.debug && healthCheck(formCtrl, $element, attrs);
+                    options.debug && healthCheck(formCtrl, formEl, $element, attrs);
 
-                    !formCtrl.$vid && setValidityId(formCtrl, angular.element($window.form));
+                    !formCtrl.$vid && setValidityId(formCtrl, angular.element(formEl));
                     setValidityId(modelCtrl, $element);
                     modelCtrl.$validityToggles = {};
 
@@ -368,16 +369,15 @@
                 }
             };
 
-            function healthCheck(formCtrl, $element, attrs) {
-                !formCtrl.$name && $log.warn('Angular-Validity: form is missing "name" attribute:', formCtrl);
+            function healthCheck(formCtrl, formEl, $element, attrs) {
+                !formCtrl.$name && $log.warn('Angular-Validity: form is missing "name" attribute:', formEl);
                 !attrs.validity && $log.warn('Angular-Validity: element is missing "validity" rules:', $element);
 
                 if (!attrs.name) {
-                  $log.warn('Angular-Validity: element is missing "name" attribute:', $element);
+                    $log.warn('Angular-Validity: element is missing "name" attribute:', $element);
                 } else {
-                  var form = document.querySelector('[name=' + formCtrl.$name + ']');
-                  var elements = form.querySelectorAll('[name=' + attrs.name + ']');
-                  elements.length > 1 && $log.warn('Angular-Validity: multiple elements have identical name attribute: "%s"', attrs.name, elements);
+                    var elements = formEl.querySelectorAll('[name=' + attrs.name + ']');
+                    elements.length > 1 && $log.warn('Angular-Validity: multiple elements have identical name attribute: "%s"', attrs.name, $element);
                 }
             }
 
@@ -388,7 +388,7 @@
                 function uuid() {
                     var id1 = Math.random().toString(36),
                       id2 = Math.random().toString(36);
-                    return 'av' + id1.substring(2, 15) + id2.substring(2, 15);
+                    return 'av-' + id1.substring(2, 15) + id2.substring(2, 15);
                 }
             }
         }
