@@ -348,6 +348,10 @@
               modelCtrl = ctrls[1],
               options = validity.options();
 
+            // There are several malformed directives in the wild that break the element-to-form
+            // relationship that Angular creates. This is a fail-safe for such scenarios.
+            if (!formEl) formEl = $element.closest('form[name="' + formCtrl.$name + '"]');
+
             options.debug && healthCheck(formCtrl, formEl, $element, attrs);
 
             !formCtrl.$vid && setValidityId(formCtrl, angular.element(formEl));
