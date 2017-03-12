@@ -343,10 +343,11 @@
           restrict: 'A',
           require: ['^form', 'ngModel'],
           link: function(scope, $element, attrs, ctrls) {
-            var formEl = $element[0].form,
-              formCtrl = ctrls[0],
+            var formCtrl = ctrls[0],
               modelCtrl = ctrls[1],
               options = validity.options();
+
+            var formEl = getFormElement($element, formCtrl);
 
             options.debug && healthCheck(formCtrl, formEl, $element, attrs);
 
@@ -364,6 +365,16 @@
               $element.bind(event, function() {
                 validity.validate(formCtrl, modelCtrl);
               });
+            }
+
+            function getFormElement($element, formCtrl) {
+              var form = $element[0].form;
+
+              // There are several malformed directives in the wild that break the element-to-form
+              // relationship that Angular creates. This is a fail-safe for such scenarios.
+              if (!form) return $element.closest('form[name="' + formCtrl.$name + '"]');
+
+              return form;
             }
           }
         };
