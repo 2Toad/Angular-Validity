@@ -24,7 +24,7 @@
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "dependencies": {
-    "angular": "~1.5"
+    "angular": "~1.7"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
